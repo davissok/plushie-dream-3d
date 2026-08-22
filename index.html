@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Plushie Collection</title>
+  
+  <!-- Unique Typography from Google Fonts (Avoiding generic AI fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <!-- Three.js Background Engine -->
+  <div id="webgl-canvas-container"></div>
+
+  <!-- Noise Texture Overlay for Visual Depth -->
+  <div class="noise-overlay"></div>
+
+  <!-- Minimalist High-End UI -->
+  <main class="ui-layer">
+    
+    <!-- Header -->
+    <header class="header reveal-1">
+      <div class="brand">
+        <span class="brand-icon">✧</span>
+        <span class="brand-text">PALS</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#collection">Collection</a>
+        <a href="#about">Philosophy</a>
+        <a href="#contact" class="nav-btn">Adopt</a>
+      </nav>
+    </header>
+
+    <!-- Hero Content (Asymmetrical Layout) -->
+    <section class="hero-content">
+      <div class="title-wrapper">
+        <p class="eyebrow reveal-2">Spring 2026 Capsule</p>
+        <h1 class="main-title reveal-3">
+          Softness,<br>
+          <span class="italic">Reimagined.</span>
+        </h1>
+      </div>
+
+      <div class="description-wrapper reveal-4">
+        <p class="description">
+          A minimalist curation of ultra-soft, huggable companions designed with precision, empathy, and unparalleled aesthetic refinement.
+        </p>
+        <button class="cta-btn">
+          Explore the Dream
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Footer Meta -->
+    <footer class="footer-meta reveal-5">
+      <div class="meta-item">
+        <span class="meta-label">Edition</span>
+        <span class="meta-value">01 / Original</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Experience</span>
+        <span class="meta-value">Interactive WebGL</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Status</span>
+        <span class="meta-value"><span class="status-dot"></span> Available</span>
+      </div>
+    </footer>
+
+  </main>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
