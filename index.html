@@ -14,7 +14,7 @@
 </head>
 <body>
   <!-- Three.js Background Engine -->
-  <div id="webgl-canvas-container"></div>
+  <div id="webgl-canvas-container" aria-hidden="true"></div>
 
   <!-- Noise Texture Overlay for Visual Depth -->
   <div class="noise-overlay"></div>
@@ -28,7 +28,7 @@
         <span class="brand-icon">✧</span>
         <span class="brand-text">PALS</span>
       </div>
-      <nav class="nav-links">
+      <nav class="nav-links" aria-label="Main navigation">
         <a href="#collection">Collection</a>
         <a href="#about">Philosophy</a>
         <a href="#contact" class="nav-btn">Adopt</a>
@@ -44,6 +44,8 @@
           <span class="italic">Reimagined.</span>
         </h1>
       </div>
+
+      <div class="scene-stage" aria-hidden="true"></div>
 
       <div class="description-wrapper reveal-4">
         <p class="description">

@@ -3,8 +3,8 @@ import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 export class MinimalistPlushWorld {
   constructor(container) {
     this.container = container;
-    this.width = window.innerWidth;
-    this.height = window.innerHeight;
+    this.width = Math.max(container.clientWidth, 1);
+    this.height = Math.max(container.clientHeight, 1);
     
     this.mouse = new THREE.Vector2(0.5, 0.5);
     this.targetMouse = new THREE.Vector2(0.5, 0.5);
@@ -28,7 +28,7 @@ export class MinimalistPlushWorld {
         alpha: true 
     });
     this.renderer.setSize(this.width, this.height);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, this.width <= 900 ? 1.5 : 2));
     this.renderer.outputColorSpace = THREE.SRGBColorSpace; 
     
     this.container.appendChild(this.renderer.domElement);
@@ -44,15 +44,9 @@ export class MinimalistPlushWorld {
       this.createPlushPlane(texture);
     });
 
-    window.addEventListener('resize', this.onResize.bind(this));
-    window.addEventListener('mousemove', this.onMouseMove.bind(this));
-    
-    window.addEventListener('touchmove', (e) => {
-      if(e.touches.length > 0) {
-        this.targetMouse.x = e.touches[0].clientX / this.width;
-        this.targetMouse.y = 1.0 - (e.touches[0].clientY / this.height);
-      }
-    }, { passive: true });
+    this.resizeObserver = new ResizeObserver(() => this.onResize());
+    this.resizeObserver.observe(this.container);
+    window.addEventListener('pointermove', this.onMouseMove.bind(this), { passive: true });
 
     this.clock = new THREE.Clock();
     this.animate();
@@ -115,34 +109,28 @@ export class MinimalistPlushWorld {
     const visibleHeight = 2 * Math.tan(vFov / 2) * this.camera.position.z;
     const visibleWidth = visibleHeight * viewportAspect;
     
-    let scale = 1;
-    
-    if (viewportAspect < 1.0) {
-      scale = visibleWidth / 16;
-    } else if (viewportAspect > imageAspect) {
-      scale = visibleWidth / 16;
-    } else {
-      scale = visibleHeight / 9;
-    }
+    let scale = viewportAspect > imageAspect ? visibleWidth / 16 : visibleHeight / 9;
     
     // Slight overscan to hide any deeper wave gaps at the very edge
-    scale *= 1.03;
+    scale *= 1.06;
     
     this.mesh.scale.set(scale, scale, scale);
   }
 
   onMouseMove(event) {
-    this.targetMouse.x = event.clientX / this.width;
-    this.targetMouse.y = 1.0 - (event.clientY / this.height);
+    const bounds = this.container.getBoundingClientRect();
+    this.targetMouse.x = THREE.MathUtils.clamp((event.clientX - bounds.left) / this.width, 0, 1);
+    this.targetMouse.y = 1.0 - THREE.MathUtils.clamp((event.clientY - bounds.top) / this.height, 0, 1);
   }
 
   onResize() {
-    this.width = window.innerWidth;
-    this.height = window.innerHeight;
+    this.width = Math.max(this.container.clientWidth, 1);
+    this.height = Math.max(this.container.clientHeight, 1);
     
     this.camera.aspect = this.width / this.height;
     this.camera.updateProjectionMatrix();
     
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, this.width <= 900 ? 1.5 : 2));
     this.renderer.setSize(this.width, this.height);
     
     this.updatePlaneScale();

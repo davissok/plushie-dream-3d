@@ -32,24 +32,30 @@ body {
   font-family: var(--font-body);
   background-color: var(--c-bg);
   color: var(--c-text-primary);
-  overflow: hidden; /* Fullscreen immersive experience */
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
 }
 
 /* 1. Backgrounds & Depth */
 #webgl-canvas-container {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   z-index: 1;
+  background: var(--c-bg) url('./assets/hero.jpg') center / cover no-repeat;
+  touch-action: pan-y;
+}
+
+#webgl-canvas-container canvas {
+  display: block;
 }
 
 /* Subtle Film Grain / Noise for Editorial Texture */
 .noise-overlay {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -63,15 +69,14 @@ body {
 
 /* 2. UI Layer & Spatial Composition */
 .ui-layer {
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
   z-index: 10;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  padding: var(--space-md) var(--space-lg);
+  padding: clamp(1.5rem, 4vh, 3rem) clamp(1.5rem, 6vw, 6rem);
   pointer-events: none; /* Let Three.js canvas receive mouse events */
 }
 
@@ -109,6 +114,9 @@ body {
 }
 
 .nav-links a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   text-decoration: none;
   color: var(--c-text-primary);
   font-size: 0.85rem;
@@ -137,11 +145,16 @@ body {
 
 /* Hero Content - Asymmetrical Layout */
 .hero-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 4rem;
-  margin-top: 10vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 320px);
+  align-items: center;
+  gap: clamp(2rem, 4vw, 4rem);
+  margin-block: clamp(2rem, 8vh, 6rem);
+  min-width: 0;
+}
+
+.scene-stage {
+  display: none;
 }
 
 .eyebrow {
@@ -155,7 +168,7 @@ body {
 
 .main-title {
   font-family: var(--font-display);
-  font-size: clamp(4rem, 10vw, 8.5rem);
+  font-size: clamp(4rem, 7.5vw, 8.5rem);
   line-height: 0.9;
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -171,9 +184,9 @@ body {
 }
 
 .description-wrapper {
-  align-self: flex-end;
+  align-self: end;
   max-width: 320px;
-  margin-right: 5vw;
+  margin-bottom: 1rem;
 }
 
 .description {
@@ -289,11 +302,78 @@ body {
   }
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .nav-links a:not(.nav-btn) { display: none; }
-  .hero-content { margin-top: 5vh; gap: 2rem; }
-  .main-title { font-size: 14vw; }
-  .description-wrapper { align-self: flex-start; margin-right: 0; max-width: 100%; }
-  .footer-meta { flex-direction: column; gap: 1rem; }
+/* The layout can grow vertically instead of clipping short screens. */
+@media (max-width: 900px) {
+  .ui-layer {
+    padding: 1.25rem clamp(1.25rem, 5vw, 3rem) 2rem;
+  }
+
+  .header {
+    gap: 0.75rem 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .nav-links { gap: clamp(0.75rem, 3vw, 1.5rem); }
+  .nav-links a { font-size: 0.7rem; }
+  .nav-btn { padding: 0.6rem 1rem; }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    margin-block: clamp(2.5rem, 6vw, 4rem) 2.5rem;
+  }
+
+  .eyebrow { font-size: 0.7rem; margin-bottom: 1rem; }
+  .main-title { font-size: clamp(3.25rem, 12vw, 6rem); }
+  .main-title .italic { padding-left: 0.4ch; }
+
+  .scene-stage {
+    display: block;
+    position: relative;
+    aspect-ratio: 4 / 3;
+    margin-block: 1.75rem;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    pointer-events: auto;
+  }
+
+  .scene-stage #webgl-canvas-container {
+    position: absolute;
+  }
+
+  .description-wrapper {
+    align-self: center;
+    width: 100%;
+    max-width: 36rem;
+    margin: 0;
+  }
+
+  .description {
+    font-size: clamp(0.95rem, 2vw, 1.05rem);
+    margin-bottom: 1.25rem;
+    text-shadow: none;
+  }
+
+  .cta-btn { min-height: 48px; padding: 1rem 1.5rem; }
+  .footer-meta { gap: 1.5rem; flex-wrap: wrap; }
+  .meta-item { flex: 1 1 120px; }
+  .meta-value { font-size: 0.8rem; }
+}
+
+@media (max-width: 420px) {
+  .nav-links { width: 100%; justify-content: space-between; }
+  .cta-btn { width: 100%; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [class*="reveal-"] { animation: none; opacity: 1; transform: none; }
+  .status-dot { animation: none; }
+  .cta-btn, .cta-btn svg { transition: none; }
+}
+
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--c-text-primary);
+  outline-offset: 4px;
 }
