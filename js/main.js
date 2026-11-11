@@ -1,4 +1,4 @@
-import { MinimalistPlushWorld } from './scene.js';
+import { MinimalistPlushWorld } from './scene.js?v=responsive-1';
 
 window.addEventListener('DOMContentLoaded', () => {
   const container = document.getElementById('webgl-canvas-container');
